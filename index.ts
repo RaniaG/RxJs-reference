@@ -1,14 +1,18 @@
 import {
+  asapScheduler,
+  asyncScheduler,
   concat,
   from,
   fromEvent,
   interval,
+  merge,
   Observable,
   Observer,
   of,
   pipe,
+  queueScheduler,
   Subject,
-  throwError,
+  throwError
 } from "rxjs";
 import { ajax } from "rxjs/ajax";
 import {
@@ -17,6 +21,7 @@ import {
   map,
   mergeMap,
   multicast,
+  observeOn,
   publish,
   refCount,
   share,
@@ -256,7 +261,7 @@ setTimeout(() => {
 intervalObservable.subscribe((res) => subject$.next(res));
 
 //notice that the first two observers recieve 0, and all three recieve 1, and so on..
-*/
+
 
 //Operators
 
@@ -277,3 +282,35 @@ setTimeout(() => {
 }, 4000);
 
 //#endregion
+
+
+//#region schedulers
+
+console.log('start schedulers');
+
+const queueObs = of('queue scheduler', queueScheduler);
+const asyncObs = of('async scheduler', asyncScheduler);
+const asapObs = of('asap scheduler', asapScheduler);
+
+merge(queueObs, asyncObs, asapObs)
+  .subscribe(res => console.log(res));
+
+console.log('end schedulers');
+
+//the order of execution
+//start schedulers, queue scheduler, end schedulers, asap scheduler, async scheduler
+
+
+//schedulers operators
+console.log('start schedulers operators')
+from([1, 2, 3, 4], queueScheduler)
+  .pipe(
+    tap(res => console.log("value: " + res)),
+    observeOn(asyncScheduler), //try to comment this line
+    tap(res => console.log("async scheduler: " + res)),
+  ).subscribe();
+console.log('end schedulers operators')
+
+//#endregion
+
+*/

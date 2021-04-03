@@ -15,7 +15,7 @@ var app = express();
 app.set('views', path.join(__dirname, '/server/views'));
 app.set('view engine', 'pug');
 
-app.use(favicon(path.join(__dirname, 'dist/favicon.png')));
+app.use(favicon(path.join(__dirname, 'favicon.png')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -26,12 +26,12 @@ app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/api/readers', readers);
 app.use('/api/books', books);
 app.use('/api/errors', errors);
-app.get('*', function(req, res) {
+app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname, 'dist/index.html'));
 });
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
@@ -42,7 +42,7 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
+    app.use(function (err, req, res, next) {
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,
@@ -53,7 +53,7 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,
